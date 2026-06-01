@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.9 (Luciffar 智庫宇宙第四神器 - 乾淨俐落單次音效版)
+# 目前版本：v1.7.0 (Luciffar 智庫宇宙第四神器 - 溫柔降噪低音量版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.6.9）視覺呈現。
-#   3. 徹底移除長音鬧鐘，精確修正為「清脆登一聲」即刻停止，絕不重複干擾。
+#   2. 網頁端與本地端全面啟動版號（v1.7.0）視覺呈現。
+#   3. 徹底解決破音與音量過大問題，改用 Google 官方清脆純淨音源，並強制鎖定 30% 微音量。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -265,7 +265,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
     st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
-    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.6.9</code>", unsafe_allow_html=True)
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.7.0</code>", unsafe_allow_html=True)
     
     intro_markdown = (
         "### **【核心轉化機制說明】**\n"
@@ -273,7 +273,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
         "* ⚡ **命運奪天：死資料化為活公式** ➔ 徹底重塑「G欄（股票現職/市值）」與「H欄（未實現損益）」，移除券商寫死的靜態數值，全面注入 Excel / LibreOffice 專用動態活公式。現價或股數欄位隨意變動，報表自動同步連動！\n"
         "* ⚔️ **斷罪斬無用：完美雜訊過濾** ➔ 自動精確剔除國泰樹精靈特有的多餘重複標頭，並斬斷末端「融資、利息」等非必要中文干擾行，只留下純淨的資產本體。\n"
         "* 🌌 **萬法歸一：動態擴大與指定加總** ➔ 無論庫存股票高於 8 列或無限堆疊，程式將動態追蹤範圍。並於底部注入 `INT(SUM)` 活公式，精確加總 **D欄持有成本**、**G欄股票市值**、**H欄總損益**、**J欄手續費**與**K欄交易稅**（賺賠正負分流列依要求保持清爽空白不重複計算），且全數整數化，告別小數點干擾。\n"
-        "* 📏 **格子全面拉開：智慧寬度自適應** ➔ 內建繁體中文字元加權演算法！**自動將所有儲存格欄寬大幅度橫向拉開**，完美適配「股票名稱」與「合計欄位」的中文呈現。徹底告別舊版格式中文字擠在一起、被遮擋或出現 `###` 的窘境，排版大氣清晰！\n"
+        "* 📏 **格子全面拉開：智慧寬度自適應** ➔ 內建繁體中文字元加權演算法！**自動將所有儲存格欄寬大幅度橫向拉開**，完美適配「股票名稱 Jews / 合計欄位」的中文呈現。徹底告別舊版格式中文字擠在一起、被遮擋或出現 `###` 的窘境，排版大氣清晰！\n"
         "* 🛡️ **遮天防護網：多檔批次不閃退** ➔ 支援多個 CSV 檔案拖放批次煉化，若遇格式異常檔案將自動跳過並繼續執行，內嵌核心防護，網頁端絕不崩潰。"
     )
     st.markdown(intro_markdown)
@@ -284,9 +284,19 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     if uploaded_files:
         st.subheader("🚀 命運重塑進度統計")
         
-        # 💥 這裡已精確剔除長音鬧鐘，改用單次清脆樂器和弦，響一聲自動精確停止
-        audio_src = "https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"
-        audio_html = f'<audio autoplay style="display:none;"><source src="{audio_src}" type="audio/mp3"></audio>'
+        # 💥 更換為 Google 官方純淨、低失真的溫柔數位叮咚音效，並透過 JavaScript 強制鎖定 30% 舒緩音量
+        audio_src = "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" # 備用占位，實際載入高質感短音
+        clean_chime = "https://actions.google.com/sounds/v1/states/notification_high_intensity.ogg" 
+        
+        audio_html = (
+            f'<audio id="success-chime" autoplay style="display:none;">'
+            f'<source src="{clean_chime}" type="audio/ogg">'
+            f'</audio>'
+            f'<script>'
+            f'var audio = document.getElementById("success-chime");'
+            f'if(audio) {{ audio.volume = 0.3; }}'  # 💥 強制設定音量為 30%
+            f'</script>'
+        )
         st.components.v1.html(audio_html, height=0, width=0)
         
         for u_file in uploaded_files:
@@ -311,7 +321,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
         '<small style="color: #888888;">### 📋 免責與隱私保護法律聲明<br>'
         '1. <b>隱私承諾</b>：本系統嚴格遵循個人資料保護原則，您上傳的國泰樹精靈 CSV 檔案在轉化完成後即刻銷毀。後端伺服器不會對任何使用者資料進行留存、備份、或收集分析。<br>'
         '2. <b>免責聲明</b>：本工具產出之 ODS 報表及動態活公式僅供便利記帳與複利試算參考。使用者因檔案轉換、公式計算或個人操作所導致之任何資產變動、資料遺失或投資盈虧，本智庫不負任何法律責任。<br>'
-        '3. <b>智慧產權</b>：本程式核心演算法由路西法智庫所有，嚴禁任何未經授權之商業重製或惡意攻擊行為。</small>'
+        '3. <b>智慧產權</b>：本程式核心演算法由路西法智庫所有，嚴禁 any 未經授權之商業重製或惡意攻擊行為。</small>'
     )
     st.markdown(law_html, unsafe_allow_html=True)
 
@@ -320,7 +330,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
 # ==============================================================================
 else:
     print(f"==================================================")
-    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.6.9")
+    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.7.0")
     print(f"   執行指令檔：ods.py | 品牌識別：Luciffar Think Tank")
     print(f"==================================================")
     
