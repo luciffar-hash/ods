@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.7.2 (Luciffar 智庫宇宙第四神器 - 多檔防撞金鐘罩版)
+# 目前版本：v1.7.3 (Luciffar 智庫宇宙第四神器 - 官方原生音效完美回歸版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.7.2）視覺呈現。
-#   3. 徹底修復 Streamlit 因多檔案下載按鈕 ID 重複 (DuplicateWidgetID) 導致的閃退與無聲慘劇。
+#   2. 網頁端與本地端全面啟動版號（v1.7.3）視覺呈現。
+#   3. 徹底消滅隱存 HTML5 元件被瀏覽器全面封鎖靜態化問題，改用 Streamlit 官方原生 st.audio 播放。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -233,7 +233,7 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
         all_rows[r_total - 1].getElementsByType(TableCell)[9].setAttribute("formula", f"of:=INT(SUM({j_range}))")
         all_rows[r_total - 1].getElementsByType(TableCell)[9].setAttribute("valuetype", "float")
         all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("formula", f"of:=INT(SUM({k_range}))")
-        all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("valuetype", "float")
+        all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("float")
         
         all_rows[r_positive - 1].getElementsByType(TableCell)[7].setAttribute("formula", f'of:=INT(SUMIF({h_range};">0"))')
         all_rows[r_positive - 1].getElementsByType(TableCell)[7].setAttribute("valuetype", "float")
@@ -265,7 +265,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
     st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
-    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.7.2</code>", unsafe_allow_html=True)
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.7.3</code>", unsafe_allow_html=True)
     
     intro_markdown = (
         "### **【核心轉化機制說明】**\n"
@@ -284,17 +284,16 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     if uploaded_files:
         st.subheader("🚀 命運重塑進度統計")
         
-        # 💥 採用純 HTML5 標籤原生調用，Google 官方輕柔適中的短水滴輕彈音效
+        # 💥 核心修復：改用 Streamlit 官方原生 st.audio 元件！直接呼叫 Google 官方高音質短水滴聲，
+        # 繞過網頁沙盒的惡意隱藏判定，確保絕對有聲音、響一聲、且音量完美適中！
         soft_click_chime = "https://actions.google.com/sounds/v1/ui/click_box_buttons.ogg"
-        audio_html = f'<audio autoplay style="display:none;"><source src="{soft_click_chime}" type="audio/ogg"></audio>'
-        st.components.v1.html(audio_html, height=0, width=0)
+        st.audio(soft_click_chime, format="audio/ogg", autoplay=True)
         
         for index, u_file in enumerate(uploaded_files):
             try:
                 base_name = os.path.splitext(u_file.name)[0]
                 ods_bytes = core_transform_engine(u_file, is_bytes=True)
                 
-                # 💥 關鍵核心修復點：動態綁定唯一的 key，徹底粉碎 DuplicateWidgetID 衝突！
                 st.download_button(
                     label=f"💾 點擊下載 ➔ {base_name}_自動化.ods",
                     data=ods_bytes,
@@ -322,7 +321,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
 # ==============================================================================
 else:
     print(f"==================================================")
-    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.7.2")
+    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.7.3")
     print(f"   執行指令檔：ods.py | 品牌識別：Luciffar Think Tank")
     print(f"==================================================")
     
