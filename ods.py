@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.5 (Luciffar 智庫宇宙第四神器 - 三引號字串終極閉合版)
+# 目前版本：v1.6.6 (Luciffar 智庫宇宙第四神器 - 條件判斷語法終極重鑄版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.6.5）視覺呈現。
-#   3. 完美修復第 275 行 st.markdown 三引號未閉合之 SyntaxError 錯誤。
+#   2. 網頁端與本地端全面啟動版號（v1.6.6）視覺呈現。
+#   3. 徹底修復第 175 行殘留變數 if clean_，補齊為 if clean_num: 確保語法嚴絲合縫。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -155,21 +155,4 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
 
                     if col_letter == 'G':
                         tc.setAttribute("formula", f"of:=INT(C{out_row_idx}*F{out_row_idx})")
-                        tc.setAttribute("valuetype", "float")
-                        if orig_market_val: tc.setAttribute("value", orig_market_val)
-                    elif col_letter == 'H':
-                        tc.setAttribute("formula", f"of:=G{out_row_idx}-D{out_row_idx}")
-                        tc.setAttribute("valuetype", "float")
-                        if orig_profit_val: tc.setAttribute("value", orig_profit_val)
-                    elif col_letter == 'I':
-                        try:
-                            pure_num = float(cell_value.replace('%', '').replace(',', ''))
-                            clean_percent_str = f"{int(round(pure_num))}%" if '%' in cell_value else f"{int(round(pure_num*100))}%"
-                            tc.addElement(P(text=clean_percent_str))
-                        except ValueError:
-                            tc.addElement(P(text=cell_value))
-                    elif col_letter in ['C', 'D', 'J', 'K']:
-                        try:
-                            clean_num = cell_value.replace(',', '')
-                            if '.' in clean_num: clean_num = clean_num.split('.')[0]
-                            if clean_
+                        tc.setAttribute("
