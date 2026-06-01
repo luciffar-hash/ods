@@ -1,7 +1,8 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
+# 英文譯名：Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard
 # 檔案名稱：ods.py
-# 目前版本：v1.7.4 (Luciffar 智庫宇宙完整修復版)
+# 目前版本：v1.7.5 (Luciffar 智庫宇宙標題補全版)
 # ==============================================================================
 
 import sys, subprocess, io, csv, glob, os
@@ -61,8 +62,10 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
 # Streamlit 網頁呈現
 if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.environ):
     st.set_page_config(page_title="路西法智庫", page_icon="🌌", layout="wide")
+    
+    # 完美雙語標題
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
-    st.markdown("#### *Luciffar Think Tank: Destiny Reshaping*")
+    st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
     
     # 完整說明文件
     st.markdown("""
