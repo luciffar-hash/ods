@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.2 (Luciffar 智庫宇宙第四神器 - 字串引號完美閉合版)
+# 目前版本：v1.6.3 (Luciffar 智庫宇宙第四神器 - 核心屬性字串完美修復版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.6.2）視覺呈現。
-#   3. 完美修復第 311 行 st.download_button 中 label 的 f-string 雙引號未閉合錯誤。
+#   2. 網頁端與本地端全面啟動版號（v1.6.3）視覺呈現。
+#   3. 完美修復第 177 行屬性設定中字串引號未閉合之 SyntaxError 錯誤。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -174,4 +174,50 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
                             if '.' in clean_num: clean_num = clean_num.split('.')[0]
                             if clean_num:
                                 tc.setAttribute("value", clean_num)
-                                tc.setAttribute("valuetype
+                                tc.setAttribute("valuetype", "float")
+                            else:
+                                tc.addElement(P(text=cell_value))
+                        except ValueError:
+                            tc.addElement(P(text=cell_value))
+                    elif col_letter in ['E', 'F']:
+                        try:
+                            tc.setAttribute("value", cell_value.replace(',', ''))
+                            tc.setAttribute("valuetype", "float")
+                        except ValueError:
+                            tc.addElement(P(text=cell_value))
+                    else:
+                        tc.addElement(P(text=cell_value))
+                else:
+                    if cell_value: tc.addElement(P(text=cell_value))
+                    
+            tr.addElement(tc)
+
+    # 第三輪：動態補齊底部加總空白列 (合計、正損益、負損益)
+    for _ in range(5):
+        tr = TableRow()
+        table.addElement(tr)
+        for _ in range(12):
+            tc = TableCell()
+            tc.setAttribute("stylename", data_style)
+            tr.addElement(tc)
+
+    # 第四輪：動態計算與精確活公式加總注入
+    try:
+        all_rows = table.getElementsByType(TableRow)
+        total_rows_count = len(processed_rows)
+        
+        r_total = total_rows_count + 2
+        r_positive = total_rows_count + 3
+        r_negative = total_rows_count + 4
+        
+        all_rows[r_total - 1].getElementsByType(TableCell)[0].addElement(P(text="合計 / 總資產"))
+        all_rows[r_positive - 1].getElementsByType(TableCell)[0].addElement(P(text="正損益加總 (賺)"))
+        all_rows[r_negative - 1].getElementsByType(TableCell)[0].addElement(P(text="負損益加總 (賠)"))
+
+        if data_row_indices:
+            min_r, max_r = min(data_row_indices), max(data_row_indices)
+            d_range = f"D{min_r}:D{max_r}"
+            g_range = f"G{min_r}:G{max_r}"
+            h_range = f"H{min_r}:H{max_r}"
+            j_range = f"J{min_r}:J{max_r}"
+            k_
