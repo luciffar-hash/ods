@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.3 (Luciffar 智庫宇宙第四神器 - 核心屬性字串完美修復版)
+# 目前版本：v1.6.4 (Luciffar 智庫宇宙第四神器 - 異常處理區塊完美重鑄版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.6.3）視覺呈現。
-#   3. 完美修復第 177 行屬性設定中字串引號未閉合之 SyntaxError 錯誤。
+#   2. 網頁端與本地端全面啟動版號（v1.6.4）視覺呈現。
+#   3. 徹底拔除第 223 行殘留變數 k_，完美修復 try-except 結構崩潰之 SyntaxError。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -220,4 +220,62 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
             g_range = f"G{min_r}:G{max_r}"
             h_range = f"H{min_r}:H{max_r}"
             j_range = f"J{min_r}:J{max_r}"
-            k_
+            k_range = f"K{min_r}:K{max_r}"
+        else:
+            d_range, g_range, h_range, j_range, k_range = "D2:D2", "G2:G2", "H2:H2", "J2:J2", "K2:K2"
+
+        # 合計列精確注入 (D、G、H、J、K 全方位加總)
+        all_rows[r_total - 1].getElementsByType(TableCell)[3].setAttribute("formula", f"of:=INT(SUM({d_range}))")
+        all_rows[r_total - 1].getElementsByType(TableCell)[3].setAttribute("valuetype", "float")
+        all_rows[r_total - 1].getElementsByType(TableCell)[6].setAttribute("formula", f"of:=INT(SUM({g_range}))")
+        all_rows[r_total - 1].getElementsByType(TableCell)[6].setAttribute("valuetype", "float")
+        all_rows[r_total - 1].getElementsByType(TableCell)[7].setAttribute("formula", f"of:=INT(SUM({h_range}))")
+        all_rows[r_total - 1].getElementsByType(TableCell)[7].setAttribute("valuetype", "float")
+        all_rows[r_total - 1].getElementsByType(TableCell)[9].setAttribute("formula", f"of:=INT(SUM({j_range}))")
+        all_rows[r_total - 1].getElementsByType(TableCell)[9].setAttribute("valuetype", "float")
+        all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("formula", f"of:=INT(SUM({k_range}))")
+        all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("valuetype", "float")
+        
+        # 賺賠分流列精確注入 (僅對準 H 欄，其餘 D、G 欄保持清爽空白不重複計算)
+        all_rows[r_positive - 1].getElementsByType(TableCell)[7].setAttribute("formula", f'of:=INT(SUMIF({h_range};">0"))')
+        all_rows[r_positive - 1].getElementsByType(TableCell)[7].setAttribute("valuetype", "float")
+        all_rows[r_negative - 1].getElementsByType(TableCell)[7].setAttribute("formula", f'of:=INT(SUMIF({h_range};"<0"))')
+        all_rows[r_negative - 1].getElementsByType(TableCell)[7].setAttribute("valuetype", "float")
+    except Exception:
+        pass
+
+    # 第五輪：智慧寬度自適應調整機制（將格子徹底拉開，完整呈現中文與數字）
+    for col_idx in range(1, 13):
+        max_visual_len = col_max_widths.get(col_idx, 6)
+        # 保障首欄股票名稱、各欄合計中文有足夠舒展空間，並給予最佳安全邊界間距
+        calculated_width = max(2.8, 1.2 + (max_visual_len * 0.16))
+        
+        col_style = Style(name=f"Co{col_idx}", family="table-column")
+        col_style.addElement(TableColumnProperties(columnwidth=f"{calculated_width}cm"))
+        doc.automaticstyles.addElement(col_style)
+        table.addElement(TableColumn(stylename=f"Co{col_idx}"))
+
+    output_stream = io.BytesIO()
+    doc.save(output_stream)
+    return output_stream.getvalue()
+
+
+# ==============================================================================
+# 判斷執行環境：Streamlit 網頁模式
+# ==============================================================================
+if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.environ):
+    st.set_page_config(page_title="路西法智庫：命運重塑", page_icon="🌌", layout="wide")
+    
+    # 頂部品牌區：Luciffar 英譯與版號視覺呈現
+    st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
+    st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.6.4</code>", unsafe_allow_html=True)
+    
+    # 選項 A 官方核心轉化機制說明
+    st.markdown("""
+    ### **【核心轉化機制說明】**
+    本神器專為 **國泰樹精靈電腦版** 匯出之庫存 CSV 設計。透過自動化智慧腳本，一鍵洗滌、過濾並賦予靜態數據全新靈魂，完美相容多檔案批次處理：
+    
+    * ⚡ **命運奪天：死資料化為活公式** ➔ 徹底重塑「G欄（股票現職/市值）」與「H欄（未實現損益）」，移除券商寫死的靜態數值，全面注入 Excel / LibreOffice 專用動態活公式。現價或股數欄位隨意變動，報表自動同步連動！
+    * ⚔️ **斷罪斬無用：完美雜訊過濾** ➔ 自動精確剔除國泰樹精靈特有的多餘重複標頭，並斬斷末端「融資、利息」等非必要中文干擾行，只留下純淨的資產本體。
+    * 🌌 **萬法歸一：動態擴大與指定加總** ➔ 無論庫存股票高於 8 列或無限堆疊，程式將動態追蹤範圍。並於底部注入 `INT(SUM)` 活公式，精確加總 **D欄持有成本**、**G欄股票市值**、**H欄總損益**、**J欄手續費**與**K欄交易稅**（賺賠正負分流列依要求保持清爽空白不重複計算），且全數
