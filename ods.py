@@ -1,15 +1,10 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.9 (Luciffar 智庫宇宙溫柔低分貝版)
+# 目前版本：v1.6.9 (Luciffar 智庫宇宙溫柔輕響版)
 # ==============================================================================
 
-import sys
-import subprocess
-import io
-import csv
-import glob
-import os
+import sys, subprocess, io, csv, glob, os
 
 try:
     import streamlit as st
@@ -55,10 +50,14 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
                 decoded_content = content.decode(encoding, errors='ignore')
                 raw_rows = list(csv.reader(io.StringIO(decoded_content)))
                 if raw_rows: break
-            except Exception: continue
+            except: continue
     else:
-        with open(csv_file_obj, 'r', encoding='big5', errors='ignore') as f:
-            raw_rows = list(csv.reader(f))
+        try:
+            with open(csv_file_obj, 'r', encoding='big5', errors='ignore') as f:
+                raw_rows = list(csv.reader(f))
+        except:
+            with open(csv_file_obj, 'r', encoding='utf-8', errors='ignore') as f:
+                raw_rows = list(csv.reader(f))
 
     processed_rows = []
     data_row_indices = []
@@ -106,13 +105,25 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
     return output_stream.getvalue()
 
 if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.environ):
-    st.set_page_config(page_title="路西法智庫", page_icon="🌌", layout="wide")
+    st.set_page_config(page_title="路西法智庫：命運重塑", page_icon="🌌", layout="wide")
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
+    st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.6.9</code>", unsafe_allow_html=True)
     
-    uploaded_files = st.file_uploader("📥 祭入 CSV（支援多檔批次）：", type=["csv"], accept_multiple_files=True)
+    st.markdown("""
+    ### **【核心轉化機制說明】**
+    本神器專為 **國泰樹精靈電腦版** 匯出之庫存 CSV 設計：
+    * ⚡ **命運奪天**：將死資料洗滌，注入動態活公式，告別券商靜態死數值。
+    * ⚔️ **斷罪斬無用**：自動精確剔除重複標頭與末端干擾行，只留下純淨資產本體。
+    * 🌌 **萬法歸一**：動態追蹤庫存長度，精確加總各項資產並整數化。
+    * 🛡️ **遮天防護網**：批次煉化不閃退，內嵌隱私防護，資料即轉即銷。
+    """)
+    st.write("---")
+    
+    uploaded_files = st.file_uploader("📥 祭入國泰樹精靈庫存 CSV（支援多檔案拖放煉化）：", type=["csv"], accept_multiple_files=True)
     
     if uploaded_files:
-        # 💥 這裡就是音效區塊，已經替換為原始增益極低的輕柔音效
+        # 💥 這裡已換成 Google 原廠輕柔音效 (light_toast.ogg)
         st.components.v1.html(
             '<audio autoplay><source src="https://actions.google.com/sounds/v1/ui/light_toast.ogg" type="audio/ogg"></audio>',
             height=0
@@ -127,11 +138,11 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
                     file_name=f"{u_file.name}_自動化.ods",
                     mime="application/vnd.oasis.opendocument.spreadsheet"
                 )
-            except Exception as e: st.error(f"錯誤: {e}")
+            except Exception as e: st.error(f"❌ 煉化失敗: {e}")
         st.balloons()
 
     st.write("---")
-    st.markdown('<small style="color: #888888;">免責聲明：資料僅供參考，風險自負。</small>', unsafe_allow_html=True)
+    st.markdown('<small style="color: #888888;">📋 <b>免責與隱私保護法律聲明</b>：本工具產出之報表僅供參考，使用者因檔案轉換或操作導致之盈虧，本智庫不負任何責任。</small>', unsafe_allow_html=True)
 else:
     print("【本地模式】請將 CSV 放入資料夾後執行。")
     input("按 Enter 關閉...")
