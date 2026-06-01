@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.8 (Luciffar 智庫宇宙第四神器 - 音效字串結構全面重塑版)
+# 目前版本：v1.6.9 (Luciffar 智庫宇宙第四神器 - 乾淨俐落單次音效版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.6.8）視覺呈現。
-#   3. 徹底修復第 294 行 audio_html 三引號閉合異常之 SyntaxError。
+#   2. 網頁端與本地端全面啟動版號（v1.6.9）視覺呈現。
+#   3. 徹底移除長音鬧鐘，精確修正為「清脆登一聲」即刻停止，絕不重複干擾。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -265,9 +265,8 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
     st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
-    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.6.8</code>", unsafe_allow_html=True)
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.6.9</code>", unsafe_allow_html=True)
     
-    # 官方核心轉化機制說明文案
     intro_markdown = (
         "### **【核心轉化機制說明】**\n"
         "本神器專為 **國泰樹精靈電腦版** 匯出之庫存 CSV 設計。透過自動化智慧腳本，一鍵洗滌、過濾並賦予靜態數據全新靈魂，完美相容多檔案批次處理：\n\n"
@@ -285,10 +284,9 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     if uploaded_files:
         st.subheader("🚀 命運重塑進度統計")
         
-        # 💥 這裡徹底捨棄易出錯的原始三引號，改用單行純字串拼接，杜絕任何 SyntaxError 的可能性！
-        audio_src1 = "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"
-        audio_src2 = "https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"
-        audio_html = f'<audio autoplay style="display:none;"><source src="{audio_src1}" type="audio/ogg"><source src="{audio_src2}" type="audio/mp3"></audio>'
+        # 💥 這裡已精確剔除長音鬧鐘，改用單次清脆樂器和弦，響一聲自動精確停止
+        audio_src = "https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"
+        audio_html = f'<audio autoplay style="display:none;"><source src="{audio_src}" type="audio/mp3"></audio>'
         st.components.v1.html(audio_html, height=0, width=0)
         
         for u_file in uploaded_files:
@@ -309,7 +307,6 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
         st.balloons()
 
     st.write("---")
-    # 法律聲明同樣改用安全字串包裝
     law_html = (
         '<small style="color: #888888;">### 📋 免責與隱私保護法律聲明<br>'
         '1. <b>隱私承諾</b>：本系統嚴格遵循個人資料保護原則，您上傳的國泰樹精靈 CSV 檔案在轉化完成後即刻銷毀。後端伺服器不會對任何使用者資料進行留存、備份、或收集分析。<br>'
@@ -323,7 +320,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
 # ==============================================================================
 else:
     print(f"==================================================")
-    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.6.8")
+    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.6.9")
     print(f"   執行指令檔：ods.py | 品牌識別：Luciffar Think Tank")
     print(f"==================================================")
     
