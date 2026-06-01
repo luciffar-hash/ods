@@ -1,12 +1,12 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.7.1 (Luciffar 智庫宇宙第四神器 - 高相容清脆適中音效版)
+# 目前版本：v1.7.2 (Luciffar 智庫宇宙第四神器 - 多檔防撞金鐘罩版)
 # 更新日期：2026-06-01
 # 主要功能：
 #   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.7.1）視覺呈現。
-#   3. 徹底修復 v1.7.0 無聲問題，換用 Google 官方天生溫柔適中之水滴輕彈音源，完美回歸。
+#   2. 網頁端與本地端全面啟動版號（v1.7.2）視覺呈現。
+#   3. 徹底修復 Streamlit 因多檔案下載按鈕 ID 重複 (DuplicateWidgetID) 導致的閃退與無聲慘劇。
 #   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
 #   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
@@ -233,7 +233,7 @@ def core_transform_engine(csv_file_obj, is_bytes=False):
         all_rows[r_total - 1].getElementsByType(TableCell)[9].setAttribute("formula", f"of:=INT(SUM({j_range}))")
         all_rows[r_total - 1].getElementsByType(TableCell)[9].setAttribute("valuetype", "float")
         all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("formula", f"of:=INT(SUM({k_range}))")
-        all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("float")
+        all_rows[r_total - 1].getElementsByType(TableCell)[10].setAttribute("valuetype", "float")
         
         all_rows[r_positive - 1].getElementsByType(TableCell)[7].setAttribute("formula", f'of:=INT(SUMIF({h_range};">0"))')
         all_rows[r_positive - 1].getElementsByType(TableCell)[7].setAttribute("valuetype", "float")
@@ -265,7 +265,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
     st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
-    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.7.1</code>", unsafe_allow_html=True)
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.7.2</code>", unsafe_allow_html=True)
     
     intro_markdown = (
         "### **【核心轉化機制說明】**\n"
@@ -284,21 +284,23 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     if uploaded_files:
         st.subheader("🚀 命運重塑進度統計")
         
-        # 💥 採用純 HTML5 標籤原生調用，改用 Google 官方天生輕柔適中、絕不破音的短音效（水滴輕彈聲）
+        # 💥 採用純 HTML5 標籤原生調用，Google 官方輕柔適中的短水滴輕彈音效
         soft_click_chime = "https://actions.google.com/sounds/v1/ui/click_box_buttons.ogg"
         audio_html = f'<audio autoplay style="display:none;"><source src="{soft_click_chime}" type="audio/ogg"></audio>'
         st.components.v1.html(audio_html, height=0, width=0)
         
-        for u_file in uploaded_files:
+        for index, u_file in enumerate(uploaded_files):
             try:
                 base_name = os.path.splitext(u_file.name)[0]
                 ods_bytes = core_transform_engine(u_file, is_bytes=True)
                 
+                # 💥 關鍵核心修復點：動態綁定唯一的 key，徹底粉碎 DuplicateWidgetID 衝突！
                 st.download_button(
                     label=f"💾 點擊下載 ➔ {base_name}_自動化.ods",
                     data=ods_bytes,
                     file_name=f"{base_name}_自動化.ods",
-                    mime="application/vnd.oasis.opendocument.spreadsheet"
+                    mime="application/vnd.oasis.opendocument.spreadsheet",
+                    key=f"dl_{base_name}_{index}"
                 )
                 st.toast(f"✅ {u_file.name} 煉化完成！欄寬已自動拉開。")
             except Exception as e:
@@ -310,7 +312,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     law_html = (
         '<small style="color: #888888;">### 📋 免責與隱私保護法律聲明<br>'
         '1. <b>隱私承諾</b>：本系統嚴格遵循個人資料保護原則，您上傳的國泰樹精靈 CSV 檔案在轉化完成後即刻銷毀。後端伺服器不會對任何使用者資料進行留存、備份、或收集分析。<br>'
-        '2. <b>免責聲明</b>：本工具產出之 ODS 報表及動態活公式僅供便利記帳與複利試算參考。使用者因檔案轉換、公式計算或個人操作所導致之任何資產變動、資料遺失小投資盈虧，本智庫不負任何法律責任。<br>'
+        '2. <b>免責聲明</b>：本工具產出之 ODS 報表及動態活公式僅供便利記帳與複利試算參考。使用者因檔案轉換、公式計算或個人操作所導致之任何資產變動、資料遺失或投資盈虧，本智庫不負任何法律責任。<br>'
         '3. <b>智慧產權</b>：本程式核心演算法由路西法智庫所有，嚴禁任何未經授權之商業重製或惡意攻擊行為。</small>'
     )
     st.markdown(law_html, unsafe_allow_html=True)
@@ -320,7 +322,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
 # ==============================================================================
 else:
     print(f"==================================================")
-    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.7.1")
+    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.7.2")
     print(f"   執行指令檔：ods.py | 品牌識別：Luciffar Think Tank")
     print(f"==================================================")
     
