@@ -1,11 +1,11 @@
 # ==============================================================================
 # 項目名稱：路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS
 # 檔案名稱：ods.py
-# 目前版本：v1.6.9 (Luciffar 智庫宇宙第四神器 - 乾淨俐落單次音效版)
+# 目前版本：v1.7.0 (Luciffar 智庫宇宙第四神器 - 乾淨俐落單次音效版)
 # 更新日期：2026-06-01
 # 主要功能：
 #    1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#    2. 網頁端與本地端全面啟動版號（v1.6.9）視覺呈現。
+#    2. 網頁端與本地端全面啟動版號（v1.7.0）視覺呈現。
 #    3. 徹底移除長音鬧鐘，精確修正為「清脆登一聲」即刻停止，絕不重複干擾。
 #    4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
 #    5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
@@ -265,7 +265,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
     
     st.title("🌌 路西法智庫：命運重塑—國泰樹精靈電腦版 CSV 轉 ODS")
     st.markdown("#### *Luciffar Think Tank: Destiny Reshaping — Cathay Tree Wizard Desktop CSV to ODS Converter*")
-    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.6.9</code>", unsafe_allow_html=True)
+    st.markdown("<code style='color:#1E90FF; font-weight:bold;'>Production Version: v1.7.0</code>", unsafe_allow_html=True)
     
     intro_markdown = (
         "### **【核心轉化機制說明】**\n"
@@ -325,7 +325,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
 # ==============================================================================
 else:
     print(f"==================================================")
-    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.6.9")
+    print(f"   🌌 路西法智庫：命運重塑 (本地批次轉檔版) v1.7.0")
     print(f"   執行指令檔：ods.py | 品牌識別：Luciffar Think Tank")
     print(f"==================================================")
     
