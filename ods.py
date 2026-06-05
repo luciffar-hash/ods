@@ -4,12 +4,12 @@
 # 目前版本：v1.6.9 (Luciffar 智庫宇宙第四神器 - 乾淨俐落單次音效版)
 # 更新日期：2026-06-01
 # 主要功能：
-#   1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
-#   2. 網頁端與本地端全面啟動版號（v1.6.9）視覺呈現。
-#   3. 徹底移除長音鬧鐘，精確修正為「清脆登一聲」即刻停止，絕不重複干擾。
-#   4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
-#   5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
-#   6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
+#    1. 融入 Luciffar 智庫副標題英譯、A選項官方專業文案與智慧中文字元格子拉開機制。
+#    2. 網頁端與本地端全面啟動版號（v1.6.9）視覺呈現。
+#    3. 徹底移除長音鬧鐘，精確修正為「清脆登一聲」即刻停止，絕不重複干擾。
+#    4. 完美嵌入轉換成功音效、動態氣球特效，客製化上傳按鈕文字。
+#    5. 精確對準 D成本、G市值、H損益、J手續費、K交易稅，底部注入 INT(SUM) 活公式。
+#    6. 底部嚴謹融入「免責與隱私保護法律聲明」防護網。
 # ==============================================================================
 
 import sys
@@ -277,6 +277,11 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
         "* 🛡️ **遮天防護網：多檔批次不閃退** ➔ 支援多個 CSV 檔案拖放批次煉化，若遇格式異常檔案將自動跳過並繼續執行，內嵌核心防護，網頁端絕不崩潰。"
     )
     st.markdown(intro_markdown)
+    
+    st.image("https://i.urusai.cc/J8Go8.png")
+    st.image("https://i.urusai.cc/lGbJ4.png")
+    st.image("https://i.urusai.cc/rtvUq.png")
+    
     st.write("---")
     
     uploaded_files = st.file_uploader("📥 祭入國泰樹精靈庫存 CSV（支援多檔案拖放煉化）：", type=["csv"], accept_multiple_files=True)
@@ -305,19 +310,7 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
                 st.error(f"❌ 檔案 {u_file.name} 轉化失敗，原因：{e}")
                 
         st.balloons()
-# --- 插入位置：下方代碼請貼在此處 ---
-        st.write("---")
-        st.subheader("🌌 路西法智庫：視覺化數據解析")
-        
-        # 使用欄位排列三張圖，確保畫面整潔
-        img_col1, img_col2, img_col3 = st.columns(3)
-        with img_col1:
-            st.image("https://i.urusai.cc/J8Go8.png", use_container_width=True)
-        with img_col2:
-            st.image("https://i.urusai.cc/lGbJ4.png", use_container_width=True)
-        with img_col3:
-            st.image("https://i.urusai.cc/rtvUq.png", use_container_width=True)
-        # ------------------------------------
+
     st.write("---")
     law_html = (
         '<small style="color: #888888;">### 📋 免責與隱私保護法律聲明<br>'
