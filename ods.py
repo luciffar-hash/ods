@@ -305,7 +305,19 @@ if HAS_STREAMLIT and (st.runtime.exists() or 'STREAMLIT_SERVER_PORT' in os.envir
                 st.error(f"❌ 檔案 {u_file.name} 轉化失敗，原因：{e}")
                 
         st.balloons()
-
+# --- 插入位置：下方代碼請貼在此處 ---
+        st.write("---")
+        st.subheader("🌌 路西法智庫：視覺化數據解析")
+        
+        # 使用欄位排列三張圖，確保畫面整潔
+        img_col1, img_col2, img_col3 = st.columns(3)
+        with img_col1:
+            st.image("https://i.urusai.cc/J8Go8.png", use_container_width=True)
+        with img_col2:
+            st.image("https://i.urusai.cc/lGbJ4.png", use_container_width=True)
+        with img_col3:
+            st.image("https://i.urusai.cc/rtvUq.png", use_container_width=True)
+        # ------------------------------------
     st.write("---")
     law_html = (
         '<small style="color: #888888;">### 📋 免責與隱私保護法律聲明<br>'
